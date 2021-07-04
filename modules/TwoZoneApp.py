@@ -20,13 +20,13 @@ class TwoZoneApp(tk.Tk):
         self.figure_frame.pack(side='left')
 
         # Variables
-        self.ri_var = tk.StringVar()
-        self.ro_var = tk.StringVar()
-        self.kdry_var = tk.StringVar()
-        self.kmoist_var = tk.StringVar()
-        self.Ti_var = tk.StringVar()
-        self.To_var = tk.StringVar()
-        self.power_var = tk.StringVar()
+        self.ri_var = tk.StringVar(value='0.036')
+        self.ro_var = tk.StringVar(value='0.3')
+        self.kdry_var = tk.StringVar(value='0.3052')
+        self.kmoist_var = tk.StringVar(value='1.3')
+        self.Ti_var = tk.StringVar(value='80')
+        self.To_var = tk.StringVar(value='10')
+        self.power_var = tk.StringVar(value='270')
 
         # Adding parameters with entry cells:
         self.ri_label = tk.Label(self.variable_frame, text='ri')
@@ -65,30 +65,34 @@ class TwoZoneApp(tk.Tk):
         self.power_entry.grid(row=6, column=1, padx=(0, 10), pady=(5, 0))
 
         # Calculation button
-        self.calculate_button = tk.Button(self.variable_frame,
-                                          text='Calculate',
-                                          command=self.calculate_zones)
+        self.calculate_button = tk.Button(
+            self.variable_frame,
+            text='Calculate',
+            command=self.calculate_zones)
         self.calculate_button.grid(row=7, column=0, pady=(20, 0))
 
         # Solver initialization
-        self.solver = TwoZoneSolver(self.ri_var,
-                                    self.ro_var,
-                                    self.kdry_var,
-                                    self.kmoist_var,
-                                    self.Ti_var,
-                                    self.To_var,
-                                    self.power_var)
+        self.solver = TwoZoneSolver(
+            self.ri_var,
+            self.ro_var,
+            self.kdry_var,
+            self.kmoist_var,
+            self.Ti_var,
+            self.To_var,
+            self.power_var)
 
     def calculate_zones(self):
-        min_temp_dist = self.solver.calculate_min_temp()
-        max_temp_dist = self.solver.calculate_max_temp()
+        self.solver.setter(
+            self.ri_var.get(),
+            self.ro_var.get(),
+            self.kdry_var.get(),
+            self.kmoist_var.get(),
+            self.Ti_var.get(),
+            self.To_var.get(),
+            self.power_var.get())
 
-# These are the variables taht should be adjustable
+        temps_min = self.solver.calculate_min_temp()
+        temps_max = self.solver.calculate_max_temp()
 
-# ri
-# ro
-# kdry
-# kmoist
-# Ti
-# To
-# power
+        print(temps_min)
+        print(temps_max)
